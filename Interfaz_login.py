@@ -237,7 +237,7 @@ def validar_usuario_nombre_y_clave_registrado():
         archivo.close()
         if usuario_registrado and clave_registrada:
             ingresar_usuarios_a_la_sala_de_juego(nombre_usuario_registrado)
-            messagebox.showinfo(message="El usuario y la clave son correctos, puede jugar")
+            exito_login()
             entrada_usuario.delete(0,END)
             entrada_clave.delete(0,END)
         elif not usuario_registrado:
@@ -248,6 +248,17 @@ def validar_usuario_nombre_y_clave_registrado():
         messagebox.showerror(message="Nombre de Usuario y/o Clave no validos. No pueden estar en blanco.")
     entrada_usuario.delete(0,END)
     entrada_clave.delete(0,END)
+    
+def exito_login():
+    global ventana_exito
+    ventana_exito = Toplevel(ventana_principal)
+    ventana_exito.title("Exito")
+    ventana_exito.geometry("300x150")
+    Label(ventana_exito, text=" Usuario y claves correctos y Login finalizado con\nexito.¿Ingresa otro jugador?Presione <OK> para\nagregar otro y mantenerse en la ventana\no <INICIAR PARTIDA PARA COMENZAR A JUGAR>\n").pack()
+    Button(ventana_exito, text="OK", command=borrar_exito_login).pack()
+
+def borrar_exito_login():
+    ventana_exito.destroy()
 
 
 
@@ -297,6 +308,10 @@ def asignar_turnos_a_todos_los_jugadores():
     for clave in diccionario_jugadores_con_turnos_y_palabras_magicas_asignadas:
         print(f"El jugador {clave} tiene turno numero {diccionario_jugadores_con_turnos_y_palabras_magicas_asignadas[clave]}")
     print("A jugar!")
+    with open('Ingresos.csv','w',newline="") as f:
+        w = csv.writer(f)
+        w.writerows(diccionario_jugadores_con_turnos_y_palabras_magicas_asignadas.items())
+        ventana_principal.destroy()
     return diccionario_jugadores_con_turnos_y_palabras_magicas_asignadas
     #Aca se importaria lo de la parte uno e inmediatamente abajo de esto llamamos a la funcion jugar
                 
